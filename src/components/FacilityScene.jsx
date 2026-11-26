@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 
 /**
@@ -66,6 +66,9 @@ function sparkleTexture() {
 export default function FacilityScene() {
   const holder = useRef(null)
   const tagRefs = useRef([])
+  // True when WebGL is unavailable, blocked, or the scene threw: the hero then
+  // shows a static, brand-consistent stand-in instead of an empty square.
+  const [failed, setFailed] = useState(false)
 
   useEffect(() => {
     const el = holder.current
@@ -77,7 +80,9 @@ export default function FacilityScene() {
     let renderer
     try {
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' })
-    } catch {
+    } catch (error) {
+      console.error('[IDEAL FRESH 360] WebGL unavailable:', error)
+      setFailed(true)
       return
     }
 
@@ -90,6 +95,13 @@ export default function FacilityScene() {
     renderer.toneMappingExposure = 1.02
     renderer.domElement.setAttribute('aria-hidden', 'true')
     el.appendChild(renderer.domElement)
+
+    const onContextLost = (event) => {
+      event.preventDefault()
+      cancelAnimationFrame(raf)
+      setFailed(true)
+    }
+    renderer.domElement.addEventListener('webglcontextlost', onContextLost)
 
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(34, width() / height(), 0.1, 60)
@@ -379,10 +391,23 @@ export default function FacilityScene() {
       updateTags()
     }
 
+    let crashed = false
+
     const tick = () => {
+      if (crashed) return
       raf = requestAnimationFrame(tick)
       if (!visible) return
+      try {
+        frame()
+      } catch (error) {
+        crashed = true
+        cancelAnimationFrame(raf)
+        console.error('[IDEAL FRESH 360] 3D scene stopped:', error)
+        setFailed(true)
+      }
+    }
 
+    const frame = () => {
       const t = clock.getElapsedTime()
       pointerSmooth.lerp(pointer, 0.05)
 
@@ -425,7 +450,12 @@ export default function FacilityScene() {
     }
 
     if (reduce) {
-      render()
+      try {
+        render()
+      } catch (error) {
+        console.error('[IDEAL FRESH 360] 3D scene stopped:', error)
+        setFailed(true)
+      }
     } else {
       tick()
     }
@@ -470,9 +500,12 @@ export default function FacilityScene() {
       })
       if (envRT) envRT.dispose()
       renderer.dispose()
+      renderer.domElement.removeEventListener('webglcontextlost', onContextLost)
       if (renderer.domElement.parentNode === el) el.removeChild(renderer.domElement)
     }
   }, [])
+
+  if (failed) return <SceneFallback />
 
   return (
     <div className="hero-visual" ref={holder}>
@@ -489,6 +522,26 @@ export default function FacilityScene() {
         ))}
       </div>
       <span className="scene-hint">Drag to orbit · 360° facility view</span>
+    </div>
+  )
+}
+
+/**
+ * Static stand-in for the 3D hero. Used when WebGL cannot start (old device,
+ * blocked GPU, context lost) so the hero keeps its shape and brand message
+ * instead of collapsing to an empty box.
+ */
+export function SceneFallback() {
+  return (
+    <div className="hero-visual hero-visual--static">
+      <div className="scene-halo" aria-hidden="true" />
+      <div className="scene-stack" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
+      <span className="scene-hint">360° facility overview</span>
     </div>
   )
 }
