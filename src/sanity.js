@@ -12,6 +12,7 @@
 //   service:      { _id, order, title, blurb, points: string[], meta, icon }
 //   testimonial:  { _id, quote, name, role }
 //   heroBadge:    { _id, label }
+//   galleryItem:  { _id, title, beforeImage, afterImage }
 // ---------------------------------------------------------------------------
 
 const PROJECT_ID = import.meta.env.VITE_SANITY_PROJECT_ID
