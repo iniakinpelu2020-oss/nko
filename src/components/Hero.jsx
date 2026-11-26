@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
-import Orb from './Orb.jsx'
+import FacilityScene from './FacilityScene.jsx'
 import Magnetic from './Magnetic.jsx'
 import { waLink } from '../content.js'
 
@@ -16,7 +16,7 @@ export default function Hero({ ready, badges, company }) {
         .from('.hero-sub', { opacity: 0, y: 20, duration: 0.85 }, 0.55)
         .from('.hero-actions > *', { opacity: 0, y: 18, duration: 0.7, stagger: 0.08 }, 0.68)
         .from('.badge', { opacity: 0, y: 12, duration: 0.6, stagger: 0.07 }, 0.85)
-        .from('.orb-wrap', { opacity: 0, scale: 0.92, duration: 1.4, ease: 'power2.out' }, 0.2)
+        .from('.hero-visual', { opacity: 0, scale: 0.94, duration: 1.4, ease: 'power2.out' }, 0.2)
         .from('.hero-scroll', { opacity: 0, duration: 0.6 }, 1)
     }, root)
     return () => ctx.revert()
@@ -84,7 +84,7 @@ export default function Hero({ ready, badges, company }) {
           </div>
         </div>
 
-        <Orb />
+        <FacilityScene />
       </div>
     </section>
   )
