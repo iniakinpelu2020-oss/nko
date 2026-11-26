@@ -42,36 +42,46 @@ export const SERVICE_MEDIA = {
 }
 
 /**
- * Before & after case studies. Add another entry and the slider grows a
- * selector automatically — no layout changes required.
+ * Before & after case studies.
+ *
+ * Each pair is two genuinely different photographs: the "before" frame shows a
+ * room as it was found — cluttered, unmade, used — and the "after" frame is a
+ * separate shot of a freshly cleaned room of the same type. No filter, tint or
+ * CSS trick is used to fake the transformation; if the two URLs were ever the
+ * same, the slider would be pointless.
+ *
+ * Swap `src` for a client job photo or a Sanity CDN URL whenever real
+ * before/after images exist — nothing else has to change.
+ *
+ * Add another entry and the slider grows a selector automatically.
  */
 export const CASE_STUDIES = [
   {
     id: 'city-office',
     location: 'City of London · EC2',
     caption:
-      'A 1,400 m² office floor cleaned overnight during a fit-out handover — carpet extraction, glass, kitchens and washrooms, photographed at 06:00.',
+      'A 1,400 m² office floor taken over at fit-out handover. The communal kitchen alone took two hours — degreasing every surface, clearing crockery, descaling the taps and resetting the cupboards before the client walk-through at 06:00.',
     beforeImage: {
-      src: cdn('photo-1497366754035-f200968a6e72', { w: 1400, h: 800, q: 70 }),
-      alt: 'Office floor before cleaning: packing boxes, dull glazing and unpolished floors',
+      src: cdn('photo-1713950788917-912f9274f123', { w: 1400, h: 800, q: 70 }),
+      alt: 'Staff kitchen before cleaning: sink piled with dirty crockery and pans, open food packets, used mugs and crumbs across every worktop',
     },
     afterImage: {
-      src: cdn('photo-1497366216548-37526070297c', { w: 1400, h: 800, q: 70 }),
-      alt: 'The same office floor after a 360° clean: clear glass, spotless floors and empty surfaces',
+      src: cdn('photo-1484154218962-a197022b5858', { w: 1400, h: 800, q: 70 }),
+      alt: 'A spotless kitchen after the 360° clean: empty sink, clear white worktops, polished hob and wiped cupboard fronts',
     },
   },
   {
     id: 'manchester-tenancy',
     location: 'Manchester · M1',
     caption:
-      'A three-bedroom Manchester rental on changeover — limescale, grout lines, oven internals and balcony glass, deep-cleaned in a single visit and signed off by the letting agent with no deposit deductions.',
+      'A three-bedroom Manchester rental on changeover — bedding stripped and laundered, every room reset, bathroom descaled and floors machine-cleaned in a single visit, then signed off by the letting agent with no deposit deductions.',
     beforeImage: {
-      src: cdn('photo-1604709177225-055f99402ea3', { w: 1400, h: 800, q: 70 }),
-      alt: 'Tenant bathroom before the deep clean: dull grout, limescale on the screen and water-marked fittings',
+      src: cdn('photo-1564019472231-4586c552dc27', { w: 1400, h: 800, q: 70 }),
+      alt: 'Tenant bedroom as found at changeover: bed stripped back with creased, tangled linen and the duvet thrown across the mattress',
     },
     afterImage: {
-      src: cdn('photo-1620626011761-996317b8d101', { w: 1400, h: 800, q: 70 }),
-      alt: 'The same style of bathroom after a 360° deep clean: descaled glass, bright grout and polished chrome',
+      src: cdn('photo-1612152605347-f93296cb657d', { w: 1400, h: 800, q: 70 }),
+      alt: 'An immaculate bedroom after the 360° clean and reset: crisply made bed, dressed pillows, clear surfaces and vacuumed carpet',
     },
   },
 ]

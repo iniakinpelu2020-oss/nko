@@ -1,0 +1,106 @@
+/* ------------------------------------------------------------------ *
+ * Resilience layer — loaded after styles.css.
+ *
+ * Everything here exists so the page can never end up blank: the boot
+ * fallback, the fatal error card, the static 3D stand-in, and the honest
+ * before/after frame treatment.
+ * ------------------------------------------------------------------ */
+
+/* The comparison frame: both halves must be real boxes, not zero-height
+   wrappers, or a lazy image inside the clipped side never loads. */
+.ba-before {
+  position: absolute;
+  inset: 0;
+}
+
+/* No colour trickery on the before frame: it is an unedited photograph of the
+   room as found, so the comparison stays honest. */
+.ba-before img {
+  filter: none;
+}
+
+/* Site-wide recovery card (React error boundary). */
+.fatal {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 32px 20px;
+  background: radial-gradient(120% 120% at 50% 0%, #16224a 0%, #0b132b 62%, #060c1c 100%);
+  text-align: center;
+}
+.fatal-card {
+  max-width: 34rem;
+  padding: 36px 30px;
+  border-radius: 24px;
+  border: 1px solid rgba(248, 250, 252, 0.14);
+  background: rgba(248, 250, 252, 0.04);
+  backdrop-filter: blur(10px);
+  color: var(--alabaster);
+}
+.fatal-card .eyebrow {
+  color: #6ee7b7;
+}
+.fatal-card .h2 {
+  color: var(--alabaster);
+  margin: 6px 0 12px;
+}
+.fatal-card p {
+  color: rgba(248, 250, 252, 0.76);
+  line-height: 1.65;
+}
+.fatal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin: 22px 0 14px;
+}
+.fatal-card .btn--outline {
+  border-color: rgba(248, 250, 252, 0.32);
+  color: var(--alabaster);
+}
+.fatal-mail {
+  font-size: 0.85rem;
+  color: rgba(167, 243, 208, 0.9);
+}
+
+/* Static stand-in for the WebGL hero — stacked glass floors, pure CSS, so the
+   hero keeps its shape on devices where Three.js cannot start. */
+.hero-visual--static {
+  cursor: default;
+  display: grid;
+  place-items: center;
+  perspective: 1100px;
+}
+.scene-stack {
+  position: relative;
+  width: min(78%, 380px);
+  aspect-ratio: 1 / 1;
+  transform-style: preserve-3d;
+  transform: rotateX(58deg) rotateZ(-32deg);
+  animation: scene-stack-drift 16s ease-in-out infinite;
+}
+.scene-stack span {
+  position: absolute;
+  inset: 12%;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: linear-gradient(135deg, rgba(110, 231, 183, 0.34), rgba(16, 185, 129, 0.12));
+  box-shadow: 0 18px 48px -18px rgba(16, 185, 129, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(2px);
+}
+.scene-stack span:nth-child(1) { transform: translateZ(0px); inset: 4%; }
+.scene-stack span:nth-child(2) { transform: translateZ(58px); inset: 14%; }
+.scene-stack span:nth-child(3) { transform: translateZ(116px); inset: 24%; }
+.scene-stack span:nth-child(4) {
+  transform: translateZ(174px);
+  inset: 34%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(110, 231, 183, 0.28));
+}
+@keyframes scene-stack-drift {
+  0%, 100% { transform: rotateX(58deg) rotateZ(-32deg) translateY(-6px); }
+  50% { transform: rotateX(58deg) rotateZ(-26deg) translateY(6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-stack { animation: none; }
+}
