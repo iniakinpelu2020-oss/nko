@@ -697,6 +697,7 @@ p {
   text-align: right;
 }
 .scene-tag.is-active {
+  border-color: rgba(110, 231, 183, 0.72);
   background: rgba(11, 19, 43, 0.84);
   box-shadow: 0 0 0 1px rgba(110, 231, 183, 0.18), 0 20px 44px -20px rgba(16, 185, 129, 0.65);
 }
