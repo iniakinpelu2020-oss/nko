@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react'
 import { Icon, Stars } from '../icons.jsx'
 import { STATS, TRUST_POINTS, waLink } from '../content.js'
+import { SERVICE_MEDIA, CASE_STUDIES, FACILITY_SHOWCASE } from '../data/siteMedia.js'
+import SmartImage from './SmartImage.jsx'
 
 export function Stats() {
   return (
@@ -35,19 +37,22 @@ export function Services({ services }) {
         <div className="services-grid">
           {services.map((service) => (
             <article className="svc" key={service.id} data-reveal>
-              <span className="svc-icon">
-                <Icon name={service.icon} />
-              </span>
-              <h3>{service.title}</h3>
-              <p>{service.blurb}</p>
-              {service.points?.length > 0 && (
-                <ul>
-                  {service.points.map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
-              )}
-              {service.meta && <span className="meta">{service.meta}</span>}
+              <SmartImage media={SERVICE_MEDIA[service.id]} className="svc-media" />
+              <div className="svc-body">
+                <span className="svc-icon">
+                  <Icon name={service.icon} />
+                </span>
+                <h3>{service.title}</h3>
+                <p>{service.blurb}</p>
+                {service.points?.length > 0 && (
+                  <ul>
+                    {service.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                )}
+                {service.meta && <span className="meta">{service.meta}</span>}
+              </div>
             </article>
           ))}
         </div>
@@ -79,6 +84,15 @@ export function Trust({ company }) {
           ))}
         </div>
 
+        <div className="showcase" data-reveal>
+          {FACILITY_SHOWCASE.map((item) => (
+            <figure className="showcase-item" key={item.label} style={{ margin: 0 }}>
+              <SmartImage media={item} className="showcase-media" />
+              <figcaption>{item.label}</figcaption>
+            </figure>
+          ))}
+        </div>
+
         <div className="trust-foot" data-reveal>
           <p>
             <strong>Need our insurance certificate, RAMS or DBS policy for a tender pack?</strong> We send the
@@ -102,6 +116,8 @@ export function BeforeAfter() {
   const frame = useRef(null)
   const [position, setPosition] = useState(54)
   const [dragging, setDragging] = useState(false)
+  const [active, setActive] = useState(0)
+  const study = CASE_STUDIES[active] || CASE_STUDIES[0]
 
   const moveTo = (clientX) => {
     const el = frame.current
@@ -129,13 +145,33 @@ export function BeforeAfter() {
             <h2 className="h2">Drag the handle. That is a standard Thursday.</h2>
           </div>
           <p className="lede" style={{ marginTop: 0, maxWidth: '26rem' }}>
-            A 1,400 m² City of London office floor, cleaned overnight during a fit-out handover — carpet
-            extraction, glass, kitchens and washrooms, photographed at 06:00.
+            {study.caption}
           </p>
         </div>
 
+        {CASE_STUDIES.length > 1 && (
+          <div className="ba-cases" role="tablist" aria-label="Case studies">
+            {CASE_STUDIES.map((item, index) => (
+              <button
+                key={item.id}
+                type="button"
+                role="tab"
+                aria-selected={index === active}
+                className={`ba-case${index === active ? ' is-active' : ''}`}
+                onClick={() => {
+                  setActive(index)
+                  setPosition(54)
+                }}
+              >
+                {item.location}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div
           className="ba"
+          key={study.id}
           ref={frame}
           data-reveal
           role="slider"
@@ -157,13 +193,13 @@ export function BeforeAfter() {
           onPointerCancel={() => setDragging(false)}
         >
           <div className="ba-before">
-            <img src="/media/before.jpg" alt="Open-plan office before cleaning: stained carpet and dusty surfaces" />
+            <SmartImage media={study.beforeImage} zoom={false} />
           </div>
           <div className="ba-after" style={{ clipPath: `inset(0 0 0 ${position}%)` }}>
-            <img src="/media/after.jpg" alt="The same office after cleaning: spotless carpet and streak-free glass" />
+            <SmartImage media={study.afterImage} zoom={false} />
           </div>
-          <span className="ba-tag ba-tag--before">Before</span>
-          <span className="ba-tag ba-tag--after">After</span>
+          <span className="ba-tag ba-tag--before">Before Clean</span>
+          <span className="ba-tag ba-tag--after">After 360° Clean</span>
           <div className="ba-handle" style={{ left: `${position}%` }}>
             <span className="ba-knob">
               <Icon name="drag" />
@@ -238,7 +274,11 @@ export function CtaBand({ company }) {
             >
               WhatsApp {company.phoneDisplay}
             </a>
-            <a className="btn btn--ghost" href={`tel:${company.phoneE164}`} style={{ justifyContent: 'center' }}>
+            <a
+              className="btn btn--ghost"
+              href={`tel:${company.phoneE164}`}
+              style={{ justifyContent: 'center' }}
+            >
               Call now
             </a>
           </div>
