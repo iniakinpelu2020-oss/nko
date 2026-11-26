@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 import Preloader from './components/Preloader.jsx'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
 import Navbar from './components/Navbar.jsx'
 import Hero from './components/Hero.jsx'
 import QuoteEstimator from './components/QuoteEstimator.jsx'
@@ -37,6 +38,13 @@ export default function App() {
     if (!ready) return
     document.body.classList.remove('is-locked')
   }, [ready])
+
+  // Hard watchdog: whatever happens to the curtain, the page unlocks and the
+  // hero animates in. Scroll is never left locked on a failed start-up.
+  useEffect(() => {
+    const timer = window.setTimeout(() => setReady(true), 3200)
+    return () => window.clearTimeout(timer)
+  }, [])
 
   // Read-only CMS hydration: fallback content is already rendered.
   useEffect(() => {
@@ -81,7 +89,11 @@ export default function App() {
 
   return (
     <>
-      {!ready && <Preloader onComplete={finish} />}
+      {!ready && (
+        <ErrorBoundary fallback={null} silent>
+          <Preloader onComplete={finish} />
+        </ErrorBoundary>
+      )}
       <Navbar company={content.company} />
       <main>
         <Hero ready={ready} badges={content.heroBadges} company={content.company} />

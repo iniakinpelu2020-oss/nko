@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
-import FacilityScene from './FacilityScene.jsx'
+import FacilityScene, { SceneFallback } from './FacilityScene.jsx'
+import ErrorBoundary from './ErrorBoundary.jsx'
 import Magnetic from './Magnetic.jsx'
 import { waLink } from '../content.js'
 
@@ -84,7 +85,9 @@ export default function Hero({ ready, badges, company }) {
           </div>
         </div>
 
-        <FacilityScene />
+        <ErrorBoundary fallback={<SceneFallback />}>
+          <FacilityScene />
+        </ErrorBoundary>
       </div>
     </section>
   )
