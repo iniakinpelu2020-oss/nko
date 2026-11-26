@@ -34,7 +34,9 @@ export default function Preloader({ onComplete }) {
     const guard = window.setTimeout(finish, 2800)
 
     const counter = { v: 0 }
-    const ctx = gsap.context(() => {
+    let ctx
+    try {
+      ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'power2.out' }, onComplete: finish })
       const width = () => window.innerWidth
 
@@ -70,11 +72,16 @@ export default function Preloader({ onComplete }) {
         )
         .to('.curtain-bg', { clipPath: 'inset(0% 0% 0% 100%)', duration: 0.62, ease: 'power2.inOut' }, 0.72)
         .to(root.current, { autoAlpha: 0, duration: 0.08 }, 1.32)
-    }, root)
+      }, root)
+    } catch (error) {
+      // A failed animation must never keep the curtain — or the page — covered.
+      console.error('[IDEAL FRESH 360] startup curtain skipped:', error)
+      finish()
+    }
 
     return () => {
       window.clearTimeout(guard)
-      ctx.revert()
+      ctx?.revert()
     }
   }, [])
 

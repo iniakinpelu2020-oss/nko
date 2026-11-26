@@ -16,9 +16,79 @@
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
+    <!--
+      Critical boot styles. Inlined on purpose (style-src allows 'unsafe-inline')
+      so the very first paint is the brand, not a white page, even if the CSS
+      bundle is slow or blocked.
+    -->
+    <style>
+      html { background: #0b132b; }
+      body { margin: 0; background: #f8fafc; color: #0b132b; }
+      .boot {
+        position: fixed;
+        inset: 0;
+        z-index: 5;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: 10px;
+        padding: 32px;
+        text-align: center;
+        background: radial-gradient(120% 120% at 50% 0%, #16224a 0%, #0b132b 62%, #060c1c 100%);
+        color: #f8fafc;
+        font-family: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      .boot svg { width: 54px; height: 54px; }
+      .boot strong { font-size: 19px; letter-spacing: 0.16em; font-weight: 800; }
+      .boot strong span { color: #6ee7b7; }
+      .boot em { font-style: normal; font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: #94a3b8; }
+      .boot-bar { width: min(240px, 62vw); height: 3px; margin-top: 12px; overflow: hidden; border-radius: 999px; background: rgba(248, 250, 252, 0.14); }
+      .boot-bar i { display: block; width: 40%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #10b981, #6ee7b7); animation: boot-slide 1.15s ease-in-out infinite; }
+      @keyframes boot-slide { 0% { transform: translateX(-105%); } 100% { transform: translateX(260%); } }
+      .boot p { max-width: 30ch; margin: 6px 0 0; font-size: 13px; line-height: 1.6; color: #cbd5e1; }
+      .boot a { color: #a7f3d0; }
+      @media (prefers-reduced-motion: reduce) { .boot-bar i { animation: none; width: 100%; } }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <!--
+      Static boot fallback. React replaces this the moment the app mounts, and
+      the startup curtain covers it. If the JavaScript bundle never executes,
+      the visitor still sees the company, and can call or WhatsApp.
+    -->
+    <div id="root">
+      <div class="boot" role="status" aria-live="polite">
+        <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <circle cx="24" cy="24" r="20" stroke="rgba(110,231,183,0.28)" stroke-width="1.2" />
+          <path d="M41.2 15.4A20 20 0 0 1 44 24" stroke="#6EE7B7" stroke-width="2.2" stroke-linecap="round" />
+          <path
+            d="M24 10.5c5.2 6 8.4 10.1 8.4 14.4a8.4 8.4 0 1 1-16.8 0c0-4.3 3.2-8.4 8.4-14.4Z"
+            stroke="#F8FAFC"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+          <path d="M20.8 25.4a3.3 3.3 0 0 0 3.3 3.3" stroke="#6EE7B7" stroke-width="1.7" stroke-linecap="round" />
+        </svg>
+        <strong>IDEAL FRESH <span>360</span></strong>
+        <em>Cleaning &amp; Facility Service</em>
+        <div class="boot-bar"><i></i></div>
+        <p>
+          Loading your spotless experience. Still seeing this? Call or WhatsApp
+          <a href="tel:+447831678297">+44 7831 678297</a>.
+        </p>
+      </div>
+    </div>
+    <noscript>
+      <div class="boot">
+        <strong>IDEAL FRESH <span>360</span></strong>
+        <em>Cleaning &amp; Facility Service</em>
+        <p>
+          This site needs JavaScript. Call or WhatsApp
+          <a href="tel:+447831678297">+44 7831 678297</a> or email
+          <a href="mailto:hello@idealfresh360.co.uk">hello@idealfresh360.co.uk</a>.
+        </p>
+      </div>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
