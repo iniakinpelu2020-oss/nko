@@ -193,10 +193,13 @@ export function BeforeAfter() {
           onPointerCancel={() => setDragging(false)}
         >
           <div className="ba-before">
-            <SmartImage media={study.beforeImage} zoom={false} />
+            {/* Both frames are eager: the comparison IS the content here, and a
+                lazy image inside the clipped overlay never triggered, leaving
+                the slider blank. */}
+            <SmartImage media={study.beforeImage} zoom={false} eager />
           </div>
           <div className="ba-after" style={{ clipPath: `inset(0 0 0 ${position}%)` }}>
-            <SmartImage media={study.afterImage} zoom={false} />
+            <SmartImage media={study.afterImage} zoom={false} eager />
           </div>
           <span className="ba-tag ba-tag--before">Before Clean</span>
           <span className="ba-tag ba-tag--after">After 360° Clean</span>
